@@ -1,6 +1,5 @@
 from .layers import LinearLayer
 
-
 class NeuralNetwork():
   def __init__(self, layers_config):
     self.layers = []
@@ -15,19 +14,17 @@ class NeuralNetwork():
       x = layer(x)
     return x
 
-
-class SGDOptim():
+class SGDOptimizer():
   def __init__(self, nn, lr):
     self.lr = lr
     self.nn = nn
 
-  def backward(self, loss, predictions):
+  def backward(self, loss):
     '''Calculate the grads & new error'''
     # Calculate global loss (last layers )
-    loss = loss * self.nn.layers[-1].activation.backward(predictions)
     for layer in reversed(self.nn.layers):
       loss = layer.backward(loss)
 
-  def update(self, lr):
+  def update(self):
     for layer in self.nn.layers:
-      layer.update(lr)
+      layer.update(self.lr)
