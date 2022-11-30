@@ -1,6 +1,7 @@
 import sys
 from src.train import Trainer
 from utils import open_config
+from tests import exec_all_tests
 
 
 if __name__ == '__main__':
@@ -10,3 +11,6 @@ if __name__ == '__main__':
         config = open_config()
         trainer = Trainer(config)
         trainer()
+
+    elif command == 'test':
+        exec_all_tests()

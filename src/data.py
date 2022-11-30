@@ -15,13 +15,16 @@ class MNISTDataloader:
         self.should_shuffle = shuffle
         self.train_data, self.val_data = load_data(train_val_test_split, n_samples)
 
+        if n_samples == -1:
+            self.n_samples = len(self.train_data[0])
+
     @property
     def train_len(self):
-        return len(self.train_data)
+        return len(self.train_data[0])
         
     @property
     def val_len(self):
-        return len(self.val_data)
+        return len(self.val_data[0])
 
     def shuffle_data(self, data):
         random.shuffle(list(zip(data)))
@@ -32,13 +35,13 @@ class MNISTDataloader:
         n_samples: number of datapoints to use pass -1 for all
         '''
         X,Y = self.train_data
-        for i in range(len(self.train_data)):
+        for i in range(len(X)):
             yield np.array([X[i]]), np.array([Y[i]])
 
-        if self.should_shuffle:
-            self.shuffle_data(self.train_data)
+        # if self.should_shuffle:
+            # self.shuffle_data(self.train_data)
 
     def val_dataloader(self):
         X,Y = self.val_data
-        for i in range(len(self.val_data)):
+        for i in range(len(X)):
             yield np.array([X[i]]), np.array([Y[i]])

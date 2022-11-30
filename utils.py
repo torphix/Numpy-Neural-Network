@@ -21,5 +21,5 @@ def load_data(train_test_val_split:list, n_samples:int=-1):
     n_samples = len(X)
 
   X /= 16
-  train_size = int(len(X) * train_size)
+  train_size = int(n_samples * train_size)
   return (X[:train_size,:], Y[:train_size]), (X[train_size+1:,:], Y[train_size+1:])

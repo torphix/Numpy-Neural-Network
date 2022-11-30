@@ -37,9 +37,9 @@ class Sigmoid(BaseActivation):
         return np.multiply(self.forward(x), (1 - self.forward(x)))
 
 class ReLU(BaseActivation):
-
     def forward(self, x):
-        return np.maximum(0, x)
+      x[x < 0] = 0
+      return x
 
     def backward(self, x):
       x[x <= 0] = 0
@@ -66,9 +66,6 @@ class Softmax(BaseActivation):
     return x
 
   def backward(self, global_loss):
-    '''
-    Cross entropy loss and grad should be calculated in CE layer
-    '''
     diagonals = self.output_cache*(1-self.output_cache)
     loss = -1*np.matmul(self.output_cache.T,self.output_cache)
     np.fill_diagonal(loss,diagonals)
@@ -83,13 +80,11 @@ class CrossEntropy(BaseActivation):
     Targets: one hot encoded class labels
     '''
     # Add a tiny number to prevent taking log of 0 (nan)
-    self.outputs = outputs + 1.0e-15
-    self.targets = targets
-    return -np.sum(self.targets * -np.log(self.outputs)) 
+    return -np.log(outputs[:,targets.argmax()])
     
-  def backward(self):
+  def backward(self, outputs, targets):
     '''
     derivative of a log: 1/x (natural)
     '''
-    loss = -self.targets * (1/np.maximum(1.0e-15,self.outputs))
+    loss = -targets * (1/np.maximum(1.0e-25,outputs))
     return loss

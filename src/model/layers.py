@@ -8,8 +8,8 @@ class LinearLayer():
     '''A differentiable array'''
     assert activation in ['relu','sigmoid','softmax', None], \
       f'Activation: {activation} not implemented'
-    self.W = np.random.randn(in_d, out_d)*0.5
-    self.B = np.zeros((1,out_d))
+    self.W = (np.random.randn(in_d, out_d)+1) * 0.1
+    self.B = np.ones((1,out_d))
     self.input_cache = 0
 
     if activation == 'relu':
@@ -36,7 +36,7 @@ class LinearLayer():
 
   def backward(self, global_err):
     self.W_grad = self.input_cache.swapaxes(0,1) @ global_err
-    self.B_grad = np.sum(global_err, axis=-1, keepdims=True)
+    self.B_grad = np.mean(global_err, axis=-1, keepdims=True)
     global_err = (global_err @ self.W.swapaxes(0,1)) * self.activation.backward(self.input_cache)
     return global_err
 
