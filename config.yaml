@@ -1,14 +1,15 @@
 layers: [
-    {'in_d':64, 'out_d':100, 'activation': 'relu'},
-    {'in_d':100, 'out_d':20, 'activation': 'relu'},
-    # {'in_d':50, 'out_d':20, 'activation': 'relu'},
-    {'in_d':20, 'out_d':10, 'activation': null},
+    {'in_d':64, 'out_d':100, 'activation': 'relu', 'dropout': 0.5},
+    {'in_d':100, 'out_d':20, 'activation': 'relu', 'dropout': 0.0},
+    {'in_d':20, 'out_d':10, 'activation': null, 'dropout': 0.0},
   ]
 
-train_val_test_split: [0.9, 0.1, 0.1]
+train_val_test_split: [0.9, 0.05, 0.05]
 
-epochs: 1000
-learning_rate: 1.0e-4
+epochs: 30
+learning_rate: 1.0e-3
 log_n_steps: 1
 log_run: True
-use_n_datasamples: 10 # -1 for all
+use_n_datasamples: -1 # -1 for all
+use_early_stopping: False # Based on val acc
+early_stopping_patience: 5

@@ -62,6 +62,7 @@ class Softmax(BaseActivation):
         '''
         Calculates the softmax, data should be in form: [BS, L, N]
         '''
+        x += 1.0e-25 # Add tiny number to prevent error in np.exp
         x = np.exp(x) / np.sum(np.exp(x), axis=-1, keepdims=True)
         self.output_cache = x
         return x
@@ -81,7 +82,7 @@ class CrossEntropy(BaseActivation):
         Targets: one hot encoded class labels
         '''
         # Add a tiny number to prevent taking log of 0 (nan)
-        return -np.log(outputs[:, targets.argmax()])
+        return -np.log(outputs[:, targets.argmax()] + 1.0e-10)
 
     def backward(self, outputs, targets):
         '''

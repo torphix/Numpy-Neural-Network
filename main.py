@@ -2,8 +2,7 @@ import sys
 import unittest
 from src.train import Trainer
 from utils import open_config
-from tests import exec_all_tests
-
+from tests import *
 
 if __name__ == '__main__':
     command = sys.argv[1]
@@ -14,4 +13,4 @@ if __name__ == '__main__':
         trainer()
 
     elif command == 'test':
-        exec_all_tests()
+        unittest.main(argv=['first-arg-is-ignored'], exit=False)

@@ -19,56 +19,37 @@ def load_data(train_test_val_split: list, n_samples: int = -1):
     val_slice = int(n_samples*val_size) + train_slice
     train = X[:train_slice, :], Y[:train_slice]
     val = X[train_slice+1:val_slice, :], Y[train_slice+1:val_slice]
-    test = X[val_slice+1:, :], Y[train_slice+1:]
+    test = X[val_slice+1:, :], Y[val_slice+1:]
     return train, val, test
 
 
-class MNISTDataloader:
-    '''
-    Generator that holds each dataset
-    train_val_test_split: 
-        - splits the data pass list of each split size
-        - exclude a size in order to not have that dataset
-    n_samples: number of datapoints to use, pass -1 for all
-    '''
-
-    def __init__(self, train_val_test_split: list, shuffle: bool, n_samples: int):
-
+class Dataloader:
+    def __init__(self, data:tuple, shuffle: bool):
+        self.data = data 
         self.should_shuffle = shuffle
-        self.train_data, self.val_data, self.test_data = load_data(
-            train_val_test_split, n_samples)
 
-        if n_samples == -1:
-            self.n_samples = len(self.train_data[0])
+    def __len__(self):
+        return len(self.data[0])
 
-    @property
-    def train_len(self):
-        return len(self.train_data[0])
+    def shuffle_data(self):
+        if self.should_shuffle:
+            data = list(zip(self.data[0], self.data[1]))
+            random.shuffle(data)
+            x,y = zip(*data)
+            self.data = x,y
 
-    @property
-    def val_len(self):
-        return len(self.val_data[0])
+    def __iter__(self):
+        self.curr_idx = 0
+        self.shuffle_data()            
+        return self
 
-    @property
-    def test_len(self):
-        return len(self.test_data[0])
-
-    def shuffle_data(self, data):
-        random.shuffle(list(zip(data)))
-        return zip(*data)
-
-    def train_dataloader(self):
-        '''
-        n_samples: number of datapoints to use pass -1 for all
-        '''
-        X, Y = self.train_data
-        for i in range(len(X)):
-            yield np.array([X[i]]), np.array([Y[i]])
-
-        self.shuffle_data(self.train_data)
-
-    def val_dataloader(self):
-        self.shuffle_data(self.val_data)
-        X, Y = self.val_data
-        for i in range(len(X)):
-            yield np.array([X[i]]), np.array([Y[i]])
+    def __next__(self):
+        if self.curr_idx == len(self.data[0]):
+            self.curr_idx = 0
+            self.shuffle_data()
+            raise StopIteration
+        else:
+            x, y = self.data[0][self.curr_idx], self.data[1][self.curr_idx]
+            self.curr_idx += 1
+            return (np.expand_dims(np.array(x), axis=0), 
+                    np.expand_dims(np.array(y), axis=0))

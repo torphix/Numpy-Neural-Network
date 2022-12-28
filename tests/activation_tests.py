@@ -66,5 +66,3 @@ class SigmoidTests(unittest.TestCase):
         self.assertAlmostEqual(output[2], 0)
 
 
-def exec_activation_tests():
-    unittest.main()
