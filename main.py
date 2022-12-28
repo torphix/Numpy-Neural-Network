@@ -1,4 +1,5 @@
 import sys
+import unittest
 from src.train import Trainer
 from utils import open_config
 from tests import exec_all_tests

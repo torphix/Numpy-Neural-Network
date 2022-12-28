@@ -1,49 +1,34 @@
+import unittest
 import numpy as np
-from src.model.activations import Softmax, ReLU
+from src.model.layers import LinearLayer
+from src.train import Trainer
+from utils import open_config
 
-class SoftmaxTests:
 
-    def __init__(self):
-        self.softmax = Softmax()
+class LayerTests(unittest.TestCase):
 
-    def test_forward(self):
-        x = np.random.randn(10) +0.01
-        output = self.softmax.forward(x)
-        if round(output.sum(), 2) == 1.0:
-            print('Softmax Forward Passed!')
-        else:
-            print('Softmax Forward Failed!')
+    def test_dims(self):
 
-    def test_backward(self):
-        self.softmax.backward()
-        pass
+        self.linear_relu = LinearLayer(10, 20, 'relu')
 
-class ReluTests:
-    def __init__(self):
-        self.relu = ReLU()
+        test_input = np.random.randn(1, 10)
+        out_relu = self.linear_relu(test_input)
+        self.assertEqual(out_relu.shape, (1, 20))
 
-    def test_forward(self):
-        x = np.array([0.1, 0.0, -0.1, 1])
-        output = self.relu.forward(x)
-        x[x < 0] = 0
-        if (output == x).all() == True:
-            print('Relu forward pass Passed!')
-        else:
-            print('Relu forward pass Failed!')
 
-    def test_backward(self):
-        x = np.array([0.1, 0.0, -0.1, 1])
-        output = self.relu.backward(x)
-        x[x < 0] = 0
-        if (output == x).all() == True:
-            print('Relu forward pass Passed!')
-        else:
-            print('Relu forward pass Failed!')
+class NeuralNetworkTest(unittest.TestCase):
+
+    def test_convergance(self):
+        # Tests if network can overfit on small subset of data
+        # Intuition is if it can't then there is problem with neural network
+        config = open_config()
+        config['use_n_datasamples'] = 100
+        config['log_run'] = False
+        config['epochs'] = 30
+        trainer = Trainer(config)
+        final_outputs = trainer()
+        print(final_outputs)
 
 
 def exec_layer_tests():
-    softmax_test = SoftmaxTests()
-    softmax_test.test_forward()
-    relu_test = ReluTests()
-    relu_test.test_forward()
-    relu_test.test_backward()
+    unittest.main()
