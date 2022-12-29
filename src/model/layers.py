@@ -22,7 +22,7 @@ class LayerNorm():
 
     def forward(self, x):
         mu = np.mean(x)
-        sigma = np.sqrt((np.mean((x-mu)**2))+1.0e-10)
+        sigma = np.sqrt((np.mean((x-mu)**2))+1.0e-10) 
         return (x-mu)/sigma
 
     def backward(self, x):
@@ -83,6 +83,6 @@ class LinearLayer():
             self.activation.backward(self.input_cache)
         return global_err
 
-    def update(self, lr):
-        self.W -= self.W_grad * lr
-        self.B -= self.B_grad * lr
+    def update(self, W_update, B_update):
+        self.W -= W_update
+        self.B -= B_update

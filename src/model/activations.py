@@ -8,7 +8,6 @@ class BaseActivation(abc.ABC):
     Base class for node in computational graph
     Must implement the following methods for new nodes
     '''
-
     def __call__(self, *args, **kwargs):
         outputs = self.forward(*args, **kwargs)
         return outputs
