@@ -1,9 +1,14 @@
-1) Softmax backward test
-2) Test each module to identify which area needs fixing
+# Overview
 
+- A neural network written in pure numpy to classify MNIST digits
+- Neural Network is customizable along with all the relevant hyperparameters under the config.yaml file
 
-TODO:
-- Add tests
-- Add dropout + reg
-- Vis 
-- Read courswork outline
+## Features
+
+- [x] Linear Layer
+- [x] ReLU
+- [x] Sigmoid
+- [x] Softmax
+- [x] Dropout
+- [x] SGD
+- [x] Adam
